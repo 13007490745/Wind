@@ -482,31 +482,41 @@ uint8_t HandleMsg(MSG_DATA * pmd)
 		return cmdQuery(pmd->id, seq);
 	}
 
-	if( pb[0] == 'C' && pb[1] == '1' )
+//	if( pb[0] == 'C' && pb[1] == '1' )
+//	{
+//		int minutes;
+//
+//		// 一键清风。
+//		//XF9:C1,<minutes>
+//
+//		pb += 2;  
+//		SKIP_SPACE(pb);
+//		if( *pb == ',' ) 
+//		{
+//			pb+=2;
+//			minutes = atoi(pb);
+//		
+//			if( minutes == 0 )
+//				minutes = 5;
+//			else if( minutes > 180 )
+//				minutes = 180;
+//		}
+//		else
+//		{
+//			minutes = 5;
+//		}
+//
+//
+//		return cmdWind(pmd->id, seq, minutes);
+//	}
+	if( pb[0] == 'C' )
 	{
 		int minutes;
 
-		// 一键清风。
-		//XF9:C1,<minutes>
-
-		pb += 2;  
-		SKIP_SPACE(pb);
-		if( *pb == ',' ) 
-		{
-			pb+=2;
-			minutes = atoi(pb);
-		
-			if( minutes == 0 )
-				minutes = 5;
-			else if( minutes > 180 )
-				minutes = 180;
-		}
-		else
-		{
-			minutes = 5;
-		}
-
-
+		pb += 1;
+		minutes = atoi(pb);
+		if( minutes > 20 )
+			minutes = 20;
 		return cmdWind(pmd->id, seq, minutes);
 	}
 

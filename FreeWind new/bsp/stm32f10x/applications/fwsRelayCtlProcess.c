@@ -39,9 +39,11 @@ void fwsRlyWindOpen(uint32_t flag,uint32_t timeout)
 	{
 		if( FwsPwrDect_isStartup() == PWR_ON);
 		{
+			fctl[RLY_WIND1].Timeout = timeout;
 			fctl[RLY_WIND1].Flag |= flag;
 			RELAY_Set(RLY_WIND1,RLY_ON);
 			rt_thread_delay(1);
+			fctl[RLY_WIND2].Timeout = timeout;
 			fctl[RLY_WIND2].Flag |= flag;
 			RELAY_Set(RLY_WIND2,RLY_ON);
 			MessageTX[11]=0x01;
@@ -55,9 +57,10 @@ void fwsRlyWindClose(uint32_t flag)
 {
 	fctl[RLY_WIND1].Flag = fctl[RLY_WIND1].Flag&(~flag);
 	fctl[RLY_WIND2].Flag = fctl[RLY_WIND2].Flag&(~flag);
-	if(( fctl[RLY_WIND1].Flag == 0 )&&( fctl[RLY_WIND2].Flag == 0 ))
-	{RELAY_Set(RLY_WIND1,RLY_OFF);	
-	 RELAY_Set(RLY_WIND2,RLY_OFF);	
+	if(( fctl[RLY_WIND1].Flag == 0 )&&( fctl[RLY_WIND2].Flag == 0 )&&( fctl[RLY_WIND1].Timeout == 0 )&&( fctl[RLY_WIND2].Timeout == 0 ))
+	{
+//		RELAY_Set(RLY_WIND1,RLY_OFF);	
+//		RELAY_Set(RLY_WIND2,RLY_OFF);	
 		MessageTX[11]=0x00;
 	}
 }

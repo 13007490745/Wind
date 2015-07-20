@@ -8,6 +8,7 @@
 #define RLY_CHAIRCOOL					4
 
 #define FELAY_DELAY_FOREVER				0xffffffff
+#define FELAY_DELAY_AUTO				150	// 15s
 
 #define FELAY_NUM						5
 
@@ -20,7 +21,7 @@
 #define RLY_WIND_PHONE_APP			0x01
 #define RLY_WIND_ALLOFF_FLAG			0xFF
 
-#define MIN_DIV  100 		//600
+#define MIN_DIV  600 		//600
 
 void fwsRlyWindOpen(unsigned int flag,unsigned int timeout);
 void fwsRlyWindClose(unsigned int op);

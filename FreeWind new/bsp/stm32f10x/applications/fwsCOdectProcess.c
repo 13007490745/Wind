@@ -254,6 +254,7 @@ void FwsCOdectProcess_thread_entry(void* parameter)
 					QueryCORxBuf[rx_length] = '\0';
 
 					CoPPM = (QueryCORxBuf[3]<<8)|QueryCORxBuf[4];	
+					rt_kprintf("\n[CO]DATA: %d\n", CoPPM);
 					CoPPM_send_conver(CoPPM);
 				}
 				else
@@ -305,7 +306,7 @@ void FwsCOdectProcess_thread_entry(void* parameter)
 				Cnt = 0;
 				Cmd = ( CO_MARK | CO_WARNING_SPEAK_MARK  );
 				Sbuf_write(&Ascb,&Cmd,1);
-				fwsRlyWindOpen(RLY_WIND_CO_FLAG,FELAY_DELAY_FOREVER);	
+				fwsRlyWindOpen(RLY_WIND_CO_FLAG,FELAY_DELAY_AUTO);	
 			}
 			if( nowLVL == LV1 && frontLVL == LV0  )
 			{
@@ -344,7 +345,7 @@ void FwsCOdectProcess_thread_entry(void* parameter)
 					Cmd = ( CO_MARK | WARNING_DIDIDIDI_MARK   );
 				Sbuf_write(&Ascb,&Cmd,1);
 				nowLVL = frontLVL = LV2;
-				fwsRlyWindOpen(RLY_WIND_CO_FLAG,FELAY_DELAY_FOREVER);	
+				fwsRlyWindOpen(RLY_WIND_CO_FLAG,FELAY_DELAY_AUTO);	
 			}
 		}			
 	}

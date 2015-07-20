@@ -258,6 +258,7 @@ void FwsCH2OdectProcess_thread_entry(void* parameter)
 					QueryCH2ORxBuf[rx_length] = '\0';
 
 					Ch2oPPM = (QueryCH2ORxBuf[3]<<8)|QueryCH2ORxBuf[4];	
+					rt_kprintf("\n[CH2O]DATA: %d\n", Ch2oPPM);
 					Ch2oPPM_send_conver(Ch2oPPM);
 				}
 				else
@@ -308,7 +309,7 @@ void FwsCH2OdectProcess_thread_entry(void* parameter)
 				Cnt = 0;
 				Cmd = ( CH2O_MARK | CH2O_WARNING_SPEAK_MARK  );//语音提示报警
 				Sbuf_write(&Ascb,&Cmd,1);
-				fwsRlyWindOpen(RLY_WIND_CH2O_FLAG,FELAY_DELAY_FOREVER);	//开风机
+				fwsRlyWindOpen(RLY_WIND_CH2O_FLAG,FELAY_DELAY_AUTO);	//开风机
 			}
 
 			if( nowLVL == LV1 && frontLVL == LV0  )
@@ -348,7 +349,7 @@ void FwsCH2OdectProcess_thread_entry(void* parameter)
 					Cmd = ( CH2O_MARK | WARNING_DIDIDIDI_MARK   );
 				Sbuf_write(&Ascb,&Cmd,1);
 				nowLVL = frontLVL = LV2;
-				fwsRlyWindOpen(RLY_WIND_CH2O_FLAG,FELAY_DELAY_FOREVER);	//开风机
+				fwsRlyWindOpen(RLY_WIND_CH2O_FLAG,FELAY_DELAY_AUTO);	//开风机
 			}
 		}			
 	}
