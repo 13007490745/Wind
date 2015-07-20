@@ -1,0 +1,72 @@
+#include <board.h>
+#include <rtthread.h>
+#include "Singlebuf.h"
+#include "fws_audio.h"
+
+#define AUD_SEVR_LEN			20
+//-------------------------
+//定义接收缓冲区
+uint8_t	AudServerCmd[AUD_SEVR_LEN];
+SBUF 	Ascb; //Audio server cmd buf
+
+void AudioServer_thread_entry(void* parameter)
+{
+	static uint8_t  Cmd;
+	static uint32_t len;
+	while(1)
+	{
+		//int Sbuf_read(SBUF *sbf,unsigned char *buf,unsigned short n)		
+		if( !AUD_IsEnd() )
+		{
+		 	rt_thread_delay(20);
+			continue;
+		}
+		//Read one cmd.
+   		len = Sbuf_read(&Ascb,&Cmd,1);
+		if( len != 1 )
+		{
+			//No audio play cmd.
+		 	rt_thread_delay(20);
+			continue;
+		}
+
+		//Play audio.
+		AUD_Play(Cmd);
+		rt_thread_delay(10);
+	}
+}
+
+int AudioServer_init(void)
+{
+    rt_thread_t init_thread;
+
+	Sbuf_init(&Ascb,AudServerCmd,AUD_SEVR_LEN);
+
+    init_thread = rt_thread_create("AudSvr",
+                                   AudioServer_thread_entry, RT_NULL,
+                                   512, 30, 10);
+    if (init_thread != RT_NULL)
+        rt_thread_startup(init_thread);		
+
+    return 0;
+}
+
+#ifdef RT_USING_FINSH
+#include <finsh.h>
+int fws_audcmd(uint32_t index)
+{
+ 	static uint8_t init = 0;
+	static uint8_t Cmd;
+	if( init == 0 )
+	{
+		init = 1;
+		AudioServer_init();
+	}
+	Cmd = index;
+	Sbuf_write(&Ascb,&Cmd,1);
+ 
+	return 0;
+}
+FINSH_FUNCTION_EXPORT(fws_audcmd,fws_audcmd(index))
+#endif
+
